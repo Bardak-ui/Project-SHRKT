@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ monument.name }}</title>
+</head>
+<body>
+    <h1>{{ monument.name }}</h1>
+    <p>{{ monument.description }}</p>
+    
+    <h2>Панорамы</h2>
+    <div class="panoramas">
+        {% for panorama in panoramas %}
+            <div class="panorama">
+                <a href="{% url 'panorama_view' panorama.id %}">
+                    <img src="{{ panorama.image.url }}" width="200">
+                    <p>{{ panorama.title }}</p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <a href="/">Назад к карте</a>
+</body>
+</html>

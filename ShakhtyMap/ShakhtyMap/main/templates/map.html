@@ -1,0 +1,48 @@
+{% load leaflet_tags static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Памятники Шахт</title>
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <style>
+        #main_map {
+            height: 90vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Памятники Шахт</h1>
+    {% leaflet_map "main_map" callback="window.init_map" %}
+    
+    <script>
+        // Глобальная функция для инициализации
+        window.init_map = function(map, options) {
+            // Центр и зум
+            map.setView([47.709237, 40.215401], 13);
+            
+            // Данные в JSON-формате
+            const monumentsData = [
+                {% for monument in monuments %}
+                {
+                    id: {{ monument.id }},
+                    name: "{{ monument.name|escapejs }}",
+                    lat: {{ monument.latitude|stringformat:"f" }},
+                    lng: {{ monument.longitude|stringformat:"f" }}
+                },
+                {% endfor %}
+            ];
+            
+            // Добавление маркеров
+            monumentsData.forEach(monument => {
+                if (monument.lat && monument.lng) {
+                    L.marker([monument.lat, monument.lng])
+                        .bindPopup(`<b>${monument.name}</b><br><a href="/monument/${monument.id}/">Подробнее</a>`)
+                        .addTo(map);
+                }
+            });
+        };
+        </script>
+</body>
+</html>
